@@ -22,6 +22,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('evaluation', require('./components/Evaluation.vue').default);
+Vue.component('modal', require('./components/Modal.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -37,4 +38,6 @@ let token = localStorage.getItem("csrf");
                 'X-CSRF-TOKEN': token,
                 'X-Requested-With': 'XMLHttpRequest',
             };
+
+
 
