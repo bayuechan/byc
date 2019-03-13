@@ -29,4 +29,8 @@ class HomeController extends Controller
     {
         return response()->json('Hi');
     }
+    public function evaluation()
+    {
+        return view('evaluation');
+    }
 }
