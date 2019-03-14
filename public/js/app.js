@@ -1830,21 +1830,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    console.log(this.isModalVisible);
+    var _this = this;
+
+    axios('/evaluations').then(function (res) {
+      _this.evaluations = res.data;
+    }).catch(function (err) {
+      console.log(err);
+    });
   },
   data: function data() {
     return {
-      isModalVisible: false
+      mydate: '',
+      evaluations: {},
+      isModalVisible: false,
+      isInput: true
     };
   },
   methods: {
+    showQuery: function showQuery() {
+      this.isInput = false;
+    },
+    showInput: function showInput() {
+      this.isInput = true;
+    },
     showModal: function showModal() {
       this.isModalVisible = true;
     },
     closeModal: function closeModal() {
       this.isModalVisible = false;
+    },
+    query: function query() {
+      if (this.mydate) {
+        console.log(this.mydate);
+      }
+
+      console.log(this.mydate);
     }
   }
 });
@@ -37601,72 +37634,88 @@ var render = function() {
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header" }, [
-            _vm._v("评估 |  "),
             _c(
               "button",
-              { attrs: { id: "show-modal" }, on: { click: _vm.showModal } },
-              [_vm._v("Show Modal")]
+              {
+                staticClass: "btn btn-secondary",
+                on: { click: _vm.showInput }
+              },
+              [_vm._v("输入数据")]
+            ),
+            _vm._v(" |\n          "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                on: { click: _vm.showQuery }
+              },
+              [_vm._v("查询")]
             )
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _vm.isModalVisible
-                ? _c(
-                    "modal",
+          _c("div", { staticClass: "card-body" }, [
+            _c("form", [
+              _vm.isInput
+                ? _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "inputGroupSelect02" } }, [
+                      _vm._v("选择评估类型")
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c(
+                      "table",
+                      { staticClass: "table table-striped" },
+                      [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _vm._l(_vm.evaluations, function(evaluation) {
+                          return _c("tbody", { key: evaluation.id }, [
+                            _c("tr", [
+                              _c("th", { attrs: { scope: "row" } }, [
+                                _vm._v(_vm._s(evaluation.Date))
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(evaluation.Type))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(evaluation.Note))])
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            !_vm.isInput
+              ? _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "form",
                     {
                       on: {
-                        close: function($event) {
-                          _vm.isModalVisible = false
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.query($event)
                         }
                       }
                     },
                     [
-                      _c("h3", { attrs: { slot: "header" }, slot: "header" }, [
-                        _vm._v("查询")
+                      _c("label", { attrs: { for: "InputDate" } }, [
+                        _vm._v("选择日期")
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "form-group",
-                          attrs: { slot: "body" },
-                          slot: "body"
-                        },
-                        [
-                          _c("label", { attrs: { for: "InputDate" } }, [
-                            _vm._v("选择日期")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "input-group mb-3" }, [
-                            _c("input", {
-                              staticClass: "form-control",
-                              attrs: { type: "date", id: "InputDate" }
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "input-group-append" }, [
-                              _c(
-                                "label",
-                                {
-                                  staticClass: "input-group-text",
-                                  attrs: { for: "inputGroupSelect02" }
-                                },
-                                [_vm._v("必选")]
-                              )
-                            ])
-                          ])
-                        ]
-                      )
+                      _vm._m(4)
                     ]
                   )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm._m(0)
-            ],
-            1
-          )
+                ])
+              : _vm._e()
+          ])
         ])
       ])
     ])
@@ -37677,72 +37726,90 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("form", [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "inputGroupSelect02" } }, [
-          _vm._v("选择评估类型")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "input-group mb-3" }, [
-          _c(
-            "select",
-            {
-              staticClass: "custom-select",
-              attrs: { id: "inputGroupSelect02" }
-            },
-            [
-              _c("option", { attrs: { selected: "" } }, [_vm._v("选择类型")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "1" } }, [_vm._v("面试")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "2" } }, [_vm._v("面试评估")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "3" } }, [_vm._v("普通评估")]),
-              _vm._v(" "),
-              _c("div", {
-                staticClass: "dropdown-divider",
-                attrs: { role: "separator" }
-              }),
-              _vm._v(" "),
-              _c(
-                "option",
-                { staticClass: "dropdown-item", attrs: { href: "#" } },
-                [_vm._v("其它")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group-append" }, [
-            _c(
-              "label",
-              {
-                staticClass: "input-group-text",
-                attrs: { for: "inputGroupSelect02" }
-              },
-              [_vm._v("必选")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group mb-3" }, [
-          _c("label", { attrs: { for: "InputNote" } }, [_vm._v("备注")]),
-          _vm._v(" "),
-          _c("textarea", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "InputNote" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
+    return _c("div", { staticClass: "input-group mb-3" }, [
       _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        "select",
+        { staticClass: "custom-select", attrs: { id: "inputGroupSelect02" } },
         [
-          _c("i", { staticClass: "fas fa-check-circle " }),
-          _c("span"),
-          _vm._v("提交")
+          _c("option", { attrs: { value: "1" } }, [_vm._v("面试")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "2" } }, [_vm._v("面试评估")]),
+          _vm._v(" "),
+          _c("option", { attrs: { value: "3" } }, [_vm._v("普通评估")])
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group-append" }, [
+        _c(
+          "label",
+          {
+            staticClass: "input-group-text",
+            attrs: { for: "inputGroupSelect02" }
+          },
+          [_vm._v("必选")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group mb-3" }, [
+      _c("label", { attrs: { for: "InputNote" } }, [_vm._v("备注")]),
+      _vm._v(" "),
+      _c("textarea", {
+        staticClass: "form-control",
+        attrs: { type: "text", id: "InputNote" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+      [
+        _c("i", { staticClass: "fas fa-check-circle" }),
+        _vm._v(" "),
+        _c("span"),
+        _vm._v("提交\n              ")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Type")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Note")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group mb-3" }, [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { required: "", type: "date", id: "InputDate" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group-append" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [_vm._v("提交")]
+        )
+      ])
     ])
   }
 ]

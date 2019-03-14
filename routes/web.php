@@ -20,3 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/auth_test', 'HomeController@auth_test')->name('test');
 Route::get('/evaluation', 'HomeController@evaluation')->name('evaluation');
+Route::resource('evaluations', 'EvaluationController');
