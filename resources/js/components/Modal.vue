@@ -29,9 +29,9 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
+              
               <button class="modal-default-button" @click="$emit('close')">
-                OK
+                 关闭
               </button>
             </slot>
           </div>
@@ -60,7 +60,7 @@
 }
 
 .modal-container {
-  width: 80%;
+  width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;

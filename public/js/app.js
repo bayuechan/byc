@@ -1841,22 +1841,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    var _this = this;
-
-    axios('/evaluations').then(function (res) {
-      _this.evaluations = res.data;
-    }).catch(function (err) {
-      console.log(err);
-    });
+    this.getEvaluation();
   },
   data: function data() {
     return {
-      mydate: '',
+      mydate: "",
+      rows: 0,
+      evaluation: {},
       evaluations: {},
+      evaluations_query: {},
       isModalVisible: false,
-      isInput: true
+      isInput: true,
+      wasDeleted: false
     };
   },
   methods: {
@@ -1872,12 +1916,52 @@ __webpack_require__.r(__webpack_exports__);
     closeModal: function closeModal() {
       this.isModalVisible = false;
     },
-    query: function query() {
-      if (this.mydate) {
-        console.log(this.mydate);
-      }
+    showDeleteModal: function showDeleteModal() {
+      this.wasDeleted = true;
+    },
+    closeDeleteModal: function closeDeleteModal() {
+      this.wasDeleted = false;
+    },
+    addEvaluation: function addEvaluation() {
+      var _this = this;
 
-      console.log(this.mydate);
+      axios.post("/evaluations", this.evaluation).then(function (response) {
+        _this.getEvaluation();
+
+        _this.showModal();
+
+        _this.evaluation = {};
+      });
+    },
+    deleteEvaluation: function deleteEvaluation(id) {
+      var _this2 = this;
+
+      var url = '/evaluations/' + id;
+      axios.delete(url).then(function (response) {
+        _this2.getEvaluation();
+
+        _this2.showDeleteModal();
+      });
+    },
+    getEvaluation: function getEvaluation() {
+      var _this3 = this;
+
+      axios("/evaluations").then(function (res) {
+        _this3.evaluations = res.data;
+      }).catch(function (err) {
+        console.log(err);
+      });
+    },
+    query: function query() {
+      var _this4 = this;
+
+      if (this.mydate) {
+        axios("/evaluations/" + this.mydate).then(function (res) {
+          _this4.evaluations_query = res.data;
+        }).catch(function (err) {
+          console.log(err);
+        });
+      }
     }
   }
 });
@@ -6399,7 +6483,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal-mask {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, .5);\n  display: table;\n  transition: opacity .3s ease;\n}\n.modal-wrapper {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container {\n  width: 80%;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n  transition: all .3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3 {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body {\n  margin: 20px 0;\n}\n.modal-default-button {\n  float: right;\n}\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter {\n  opacity: 0;\n}\n.modal-leave-active {\n  opacity: 0;\n}\n.modal-enter .modal-container,\n.modal-leave-active .modal-container {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n", ""]);
+exports.push([module.i, "\n.modal-mask {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, .5);\n  display: table;\n  transition: opacity .3s ease;\n}\n.modal-wrapper {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container {\n  width: 300px;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n  transition: all .3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3 {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body {\n  margin: 20px 0;\n}\n.modal-default-button {\n  float: right;\n}\n\n/*\n * The following styles are auto-applied to elements with\n * transition=\"modal\" when their visibility is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter {\n  opacity: 0;\n}\n.modal-leave-active {\n  opacity: 0;\n}\n.modal-enter .modal-container,\n.modal-leave-active .modal-container {\n  -webkit-transform: scale(1.1);\n  transform: scale(1.1);\n}\n", ""]);
 
 // exports
 
@@ -37653,69 +37737,333 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("form", [
-              _vm.isInput
-                ? _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "inputGroupSelect02" } }, [
-                      _vm._v("选择评估类型")
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _c(
-                      "table",
-                      { staticClass: "table table-striped" },
-                      [
-                        _vm._m(3),
-                        _vm._v(" "),
-                        _vm._l(_vm.evaluations, function(evaluation) {
-                          return _c("tbody", { key: evaluation.id }, [
-                            _c("tr", [
-                              _c("th", { attrs: { scope: "row" } }, [
-                                _vm._v(_vm._s(evaluation.Date))
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(evaluation.Type))]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(evaluation.Note))])
-                            ])
-                          ])
-                        })
-                      ],
-                      2
-                    )
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            !_vm.isInput
-              ? _c("div", { staticClass: "form-group" }, [
-                  _c(
-                    "form",
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _vm.isModalVisible
+                ? _c(
+                    "modal",
                     {
                       on: {
-                        submit: function($event) {
-                          $event.preventDefault()
-                          return _vm.query($event)
+                        close: function($event) {
+                          _vm.isModalVisible = false
                         }
                       }
                     },
                     [
-                      _c("label", { attrs: { for: "InputDate" } }, [
-                        _vm._v("选择日期")
+                      _c("h3", { attrs: { slot: "header" }, slot: "header" }, [
+                        _c("i", { staticClass: "fas fa-thumbs-up" }),
+                        _vm._v("成功")
                       ]),
                       _vm._v(" "),
-                      _vm._m(4)
+                      _c("h4", { attrs: { slot: "body" }, slot: "body" }, [
+                        _vm._v("输入数据成功！")
+                      ])
                     ]
                   )
-                ])
-              : _vm._e()
-          ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.wasDeleted
+                ? _c(
+                    "modal",
+                    {
+                      on: {
+                        close: function($event) {
+                          _vm.wasDeleted = false
+                        }
+                      }
+                    },
+                    [
+                      _c("h3", { attrs: { slot: "header" }, slot: "header" }, [
+                        _c("i", { staticClass: "fas fa-thumbs-up" }),
+                        _vm._v("成功")
+                      ]),
+                      _vm._v(" "),
+                      _c("h4", { attrs: { slot: "body" }, slot: "body" }, [
+                        _vm._v("成功删除数据！")
+                      ])
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.addEvaluation($event)
+                    }
+                  }
+                },
+                [
+                  _vm.isInput
+                    ? _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "SelectType" } }, [
+                          _vm._v("选择评估类型")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group mb-3" }, [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.evaluation.Type,
+                                  expression: "evaluation.Type"
+                                }
+                              ],
+                              staticClass: "custom-select",
+                              attrs: { id: "SelectType" },
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    _vm.evaluation,
+                                    "Type",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            [
+                              _c("option", { attrs: { value: "面试" } }, [
+                                _vm._v("面试")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "面试评估" } }, [
+                                _vm._v("面试评估")
+                              ]),
+                              _vm._v(" "),
+                              _c("option", { attrs: { value: "普通评估" } }, [
+                                _vm._v("普通评估")
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _vm._m(0)
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group" }, [
+                          _c("label", { attrs: { for: "SelectDate" } }, [
+                            _vm._v("选择日期")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "input-group mb-3" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.evaluation.Date,
+                                  expression: "evaluation.Date"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                type: "date",
+                                id: "SelectDate"
+                              },
+                              domProps: { value: _vm.evaluation.Date },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.evaluation,
+                                    "Date",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-group mb-3" }, [
+                          _c("label", { attrs: { for: "InputNote" } }, [
+                            _vm._v("备注")
+                          ]),
+                          _vm._v(" "),
+                          _c("textarea", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.evaluation.Note,
+                                expression: "evaluation.Note"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "text",
+                              id: "InputNote"
+                            },
+                            domProps: { value: _vm.evaluation.Note },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.evaluation,
+                                  "Note",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c(
+                          "table",
+                          { staticClass: "table table-striped" },
+                          [
+                            _vm._m(3),
+                            _vm._v(" "),
+                            _vm._l(_vm.evaluations, function(evaluation) {
+                              return _c("tbody", { key: evaluation.id }, [
+                                _c("tr", [
+                                  _c("th", { attrs: { scope: "row" } }, [
+                                    _vm._v(_vm._s(evaluation.Date))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(evaluation.Type))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(evaluation.Note))]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-danger",
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.deleteEvaluation(
+                                              evaluation.id
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fas fa-trash-alt"
+                                        })
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ])
+                            })
+                          ],
+                          2
+                        )
+                      ])
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              !_vm.isInput
+                ? _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.query($event)
+                          }
+                        }
+                      },
+                      [
+                        _c("label", { attrs: { for: "InputDate" } }, [
+                          _vm._v("选择日期")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group mb-3" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.mydate,
+                                expression: "mydate"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              required: "",
+                              type: "month",
+                              id: "InputDate"
+                            },
+                            domProps: { value: _vm.mydate },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.mydate = $event.target.value
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm._m(4)
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.evaluations_query.length > 0
+                      ? _c(
+                          "table",
+                          { staticClass: "table table-striped" },
+                          [
+                            _vm._m(5),
+                            _vm._v(" "),
+                            _vm._l(_vm.evaluations_query, function(evaluation) {
+                              return _c("tbody", { key: evaluation.id }, [
+                                _c("tr", [
+                                  _c("th", { attrs: { scope: "row" } }, [
+                                    _vm._v(_vm._s(evaluation.Date))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(evaluation.Type))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(evaluation.Note))])
+                                ])
+                              ])
+                            })
+                          ],
+                          2
+                        )
+                      : _vm._e()
+                  ])
+                : _vm._e()
+            ],
+            1
+          )
         ])
       ])
     ])
@@ -37726,42 +38074,27 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group mb-3" }, [
+    return _c("div", { staticClass: "input-group-append" }, [
       _c(
-        "select",
-        { staticClass: "custom-select", attrs: { id: "inputGroupSelect02" } },
-        [
-          _c("option", { attrs: { value: "1" } }, [_vm._v("面试")]),
-          _vm._v(" "),
-          _c("option", { attrs: { value: "2" } }, [_vm._v("面试评估")]),
-          _vm._v(" "),
-          _c("option", { attrs: { value: "3" } }, [_vm._v("普通评估")])
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-group-append" }, [
-        _c(
-          "label",
-          {
-            staticClass: "input-group-text",
-            attrs: { for: "inputGroupSelect02" }
-          },
-          [_vm._v("必选")]
-        )
-      ])
+        "label",
+        {
+          staticClass: "input-group-text",
+          attrs: { for: "inputGroupSelect02" }
+        },
+        [_vm._v("必选")]
+      )
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group mb-3" }, [
-      _c("label", { attrs: { for: "InputNote" } }, [_vm._v("备注")]),
-      _vm._v(" "),
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { type: "text", id: "InputNote" }
-      })
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "label",
+        { staticClass: "input-group-text", attrs: { for: "SelectDate" } },
+        [_vm._v("必选")]
+      )
     ])
   },
   function() {
@@ -37789,7 +38122,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Type")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Note")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Note")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Action")])
       ])
     ])
   },
@@ -37797,18 +38132,30 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group mb-3" }, [
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { required: "", type: "date", id: "InputDate" }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-group-append" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("提交")]
-        )
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [
+          _c("i", { staticClass: "fas fa-check-circle" }),
+          _vm._v(" "),
+          _c("span"),
+          _vm._v("提交\n                  ")
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Type")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Note")])
       ])
     ])
   }
@@ -37916,7 +38263,6 @@ var render = function() {
                 { staticClass: "modal-footer" },
                 [
                   _vm._t("footer", [
-                    _vm._v("\n              default footer\n              "),
                     _c(
                       "button",
                       {
@@ -37927,7 +38273,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n                OK\n              ")]
+                      [_vm._v("\n                 关闭\n              ")]
                     )
                   ])
                 ],

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Evaluation;
+use App\Http\Resources\EvaluationCollection;
+use DateTime;
 
 class EvaluationController extends Controller
 {
@@ -39,7 +41,15 @@ class EvaluationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $evaluation = new Evaluation([
+            'Date' => $request->get('Date'),
+            'Type' => $request->get('Type'),
+            'Note' => $request->get('Note'),
+          ]);
+    
+          $evaluation->save();
+    
+          return response()->json('success');
     }
 
     /**
@@ -48,9 +58,12 @@ class EvaluationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($date)
     {
-        //
+        $mydate = new DateTime($date);
+        $year = $mydate->format('Y');
+        $month = $mydate->format('m');
+        return response()->json(Evaluation::whereYear('Date',$year)->whereMonth('Date',$month)->get());
     }
 
     /**
@@ -84,6 +97,8 @@ class EvaluationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $evaluation = Evaluation::find($id);
+        $evaluation->delete();
+        return response()->json('successfully deleted');
     }
 }
