@@ -9,17 +9,21 @@
           </div>
           <div class="card-body">
             <modal v-if="isModalVisible" @close="isModalVisible = false">
-                <h3 slot="header"><i class="fas fa-thumbs-up" ></i>成功</h3>
-                <h4 slot="body">输入数据成功！</h4>
+              <h3 slot="header">
+                <i class="fas fa-thumbs-up"></i>成功
+              </h3>
+              <h4 slot="body">输入数据成功！</h4>
             </modal>
             <modal v-if="wasDeleted" @close="wasDeleted = false">
-                <h3 slot="header"><i class="fas fa-thumbs-up" ></i>成功</h3>
-                <h4 slot="body">成功删除数据！</h4>
+              <h3 slot="header">
+                <i class="fas fa-thumbs-up"></i>成功
+              </h3>
+              <h4 slot="body">成功删除数据！</h4>
             </modal>
             <form @submit.prevent="addEvaluation">
               <div class="form-group" v-if="isInput">
                 <label for="SelectType">选择评估类型</label>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3 input-group-sm">
                   <select class="custom-select" id="SelectType" v-model="evaluation.Type">
                     <option value="面试">面试</option>
                     <option value="面试评估">面试评估</option>
@@ -32,7 +36,7 @@
 
                 <div class="input-group">
                   <label for="SelectDate">选择日期</label>
-                  <div class="input-group mb-3">
+                  <div class="input-group input-group-sm mb-3">
                     <input
                       required
                       type="date"
@@ -47,7 +51,7 @@
                   </div>
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group input-group-sm mb-3">
                   <label for="InputNote">备注</label>
                   <textarea
                     required
@@ -62,7 +66,7 @@
                   <span></span>提交
                 </button>
                 <hr>
-
+                <!-- 显示全部数据 -->
                 <table class="table table-striped">
                   <thead>
                     <tr>
@@ -77,17 +81,24 @@
                       <th scope="row">{{ evaluation.Date }}</th>
                       <td>{{ evaluation.Type }}</td>
                       <td>{{ evaluation.Note }}</td>
-                      <td><button class="btn btn-danger" @click.prevent="deleteEvaluation(evaluation.id)"><i class="fas fa-trash-alt"></i></button></td>
+                      <td>
+                        <button
+                          class="btn btn-danger"
+                          @click.prevent="deleteEvaluation(evaluation.id)"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </form>
-
+            <!-- 查询数据 -->
             <div v-if="!isInput" class="form-group">
               <form @submit.prevent="query">
                 <label for="InputDate">选择日期</label>
-                <div class="input-group mb-3">
+                <div class="input-group input-group-sm mb-3">
                   <input required type="month" class="form-control" v-model="mydate" id="InputDate">
 
                   <div class="input-group-append">
@@ -98,23 +109,90 @@
                   </div>
                 </div>
               </form>
-              <table v-if="evaluations_query.length>0" class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Note</th>
-                  </tr>
-                </thead>
-                <tbody v-for="evaluation in evaluations_query" :key="evaluation.id">
-                  <tr>
-                    <th scope="row">{{ evaluation.Date }}</th>
-                    <td>{{ evaluation.Type }}</td>
-                    <td>{{ evaluation.Note }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <!-- 显示所计算出的数据 -->
+              <div class="form-row align-items-center">
+                <div class="col-sm-3 my-1">
+                  <label for="interview">面试</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="interview"
+                      disabled
+                      v-model="rows_interviews"
+                    >
+                    <div class="input-group-append">
+                      <span class="input-group-text">x100</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 my-1">
+                  <label for="interview-evaluation">面试评估</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="interview-evaluation"
+                      disabled
+                      v-model="rows_interviews_evaluation"
+                    >
+                    <div class="input-group-append">
+                      <span class="input-group-text">x100</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 my-1">
+                  <label for="normal-evaluation">普通评估</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="normal-evaluation"
+                      disabled
+                      v-model="rows_normal_evaluation"
+                    >
+                    <div class="input-group-append">
+                      <span class="input-group-text">x80</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 my-1">
+                <label for="total">合计</label>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">=</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="total"
+                    disabled
+                    v-model="total"
+                  >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">元</span>
+                  </div>
+                </div>
+              </div>
             </div>
+            <!-- 显示查询数据 -->
+            <table v-if="evaluations_query.length>0 && !isInput" class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Note</th>
+                </tr>
+              </thead>
+              <tbody v-for="evaluation in evaluations_query" :key="evaluation.id">
+                <tr>
+                  <th scope="row">{{ evaluation.Date }}</th>
+                  <td>{{ evaluation.Type }}</td>
+                  <td>{{ evaluation.Note }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -130,13 +208,16 @@ export default {
   data() {
     return {
       mydate: "",
-      rows:0,
       evaluation: {},
       evaluations: {},
       evaluations_query: {},
       isModalVisible: false,
       isInput: true,
-      wasDeleted:false,
+      wasDeleted: false,
+      rows_interviews:0,
+      rows_interviews_evaluation:0,
+      rows_normal_evaluation:0,
+      total:0
     };
   },
   methods: {
@@ -162,31 +243,45 @@ export default {
       axios.post("/evaluations", this.evaluation).then(response => {
         this.getEvaluation();
         this.showModal();
-        this.evaluation={};
+        this.evaluation = {};
       });
     },
-    deleteEvaluation(id){
-      let url = '/evaluations/'+id;
+    deleteEvaluation(id) {
+      let url = "/evaluations/" + id;
       axios.delete(url).then(response => {
         this.getEvaluation();
         this.showDeleteModal();
       });
-
     },
-    getEvaluation(){
+    getEvaluation() {
       axios("/evaluations")
-      .then(res => {
-        this.evaluations = res.data;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+        .then(res => {
+          this.evaluations = res.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     query() {
       if (this.mydate) {
         axios("/evaluations/" + this.mydate)
           .then(res => {
             this.evaluations_query = res.data;
+            this.rows_interviews=0;
+            this.rows_interviews_evaluation=0;
+            this.rows_normal_evaluation=0;
+            // 计算相关数据
+            this.evaluations_query.forEach(element => {
+              if(element.Type == "面试"){
+                this.rows_interviews+=1;
+              }else if(element.Type == "面试评估"){
+                this.rows_interviews_evaluation+=1;
+              }else{
+                this.rows_normal_evaluation+=1;
+              }
+            });
+            this.total=this.rows_interviews*100+this.rows_interviews_evaluation*100+this.rows_normal_evaluation*80;
+
           })
           .catch(err => {
             console.log(err);

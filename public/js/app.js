@@ -1887,6 +1887,84 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     this.getEvaluation();
@@ -1894,13 +1972,16 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       mydate: "",
-      rows: 0,
       evaluation: {},
       evaluations: {},
       evaluations_query: {},
       isModalVisible: false,
       isInput: true,
-      wasDeleted: false
+      wasDeleted: false,
+      rows_interviews: 0,
+      rows_interviews_evaluation: 0,
+      rows_normal_evaluation: 0,
+      total: 0
     };
   },
   methods: {
@@ -1936,7 +2017,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteEvaluation: function deleteEvaluation(id) {
       var _this2 = this;
 
-      var url = '/evaluations/' + id;
+      var url = "/evaluations/" + id;
       axios.delete(url).then(function (response) {
         _this2.getEvaluation();
 
@@ -1958,6 +2039,21 @@ __webpack_require__.r(__webpack_exports__);
       if (this.mydate) {
         axios("/evaluations/" + this.mydate).then(function (res) {
           _this4.evaluations_query = res.data;
+          _this4.rows_interviews = 0;
+          _this4.rows_interviews_evaluation = 0;
+          _this4.rows_normal_evaluation = 0; // 计算相关数据
+
+          _this4.evaluations_query.forEach(function (element) {
+            if (element.Type == "面试") {
+              _this4.rows_interviews += 1;
+            } else if (element.Type == "面试评估") {
+              _this4.rows_interviews_evaluation += 1;
+            } else {
+              _this4.rows_normal_evaluation += 1;
+            }
+          });
+
+          _this4.total = _this4.rows_interviews * 100 + _this4.rows_interviews_evaluation * 100 + _this4.rows_normal_evaluation * 80;
         }).catch(function (err) {
           console.log(err);
         });
@@ -37754,7 +37850,7 @@ var render = function() {
                     [
                       _c("h3", { attrs: { slot: "header" }, slot: "header" }, [
                         _c("i", { staticClass: "fas fa-thumbs-up" }),
-                        _vm._v("成功")
+                        _vm._v("成功\n            ")
                       ]),
                       _vm._v(" "),
                       _c("h4", { attrs: { slot: "body" }, slot: "body" }, [
@@ -37777,7 +37873,7 @@ var render = function() {
                     [
                       _c("h3", { attrs: { slot: "header" }, slot: "header" }, [
                         _c("i", { staticClass: "fas fa-thumbs-up" }),
-                        _vm._v("成功")
+                        _vm._v("成功\n            ")
                       ]),
                       _vm._v(" "),
                       _c("h4", { attrs: { slot: "body" }, slot: "body" }, [
@@ -37804,81 +37900,131 @@ var render = function() {
                           _vm._v("选择评估类型")
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "input-group mb-3" }, [
-                          _c(
-                            "select",
-                            {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.evaluation.Type,
-                                  expression: "evaluation.Type"
+                        _c(
+                          "div",
+                          { staticClass: "input-group mb-3 input-group-sm" },
+                          [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.evaluation.Type,
+                                    expression: "evaluation.Type"
+                                  }
+                                ],
+                                staticClass: "custom-select",
+                                attrs: { id: "SelectType" },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      _vm.evaluation,
+                                      "Type",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
                                 }
-                              ],
-                              staticClass: "custom-select",
-                              attrs: { id: "SelectType" },
-                              on: {
-                                change: function($event) {
-                                  var $$selectedVal = Array.prototype.filter
-                                    .call($event.target.options, function(o) {
-                                      return o.selected
-                                    })
-                                    .map(function(o) {
-                                      var val =
-                                        "_value" in o ? o._value : o.value
-                                      return val
-                                    })
-                                  _vm.$set(
-                                    _vm.evaluation,
-                                    "Type",
-                                    $event.target.multiple
-                                      ? $$selectedVal
-                                      : $$selectedVal[0]
-                                  )
-                                }
-                              }
-                            },
-                            [
-                              _c("option", { attrs: { value: "面试" } }, [
-                                _vm._v("面试")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "面试评估" } }, [
-                                _vm._v("面试评估")
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "普通评估" } }, [
-                                _vm._v("普通评估")
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(0)
-                        ]),
+                              },
+                              [
+                                _c("option", { attrs: { value: "面试" } }, [
+                                  _vm._v("面试")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "面试评估" } }, [
+                                  _vm._v("面试评估")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "普通评估" } }, [
+                                  _vm._v("普通评估")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(0)
+                          ]
+                        ),
                         _vm._v(" "),
                         _c("div", { staticClass: "input-group" }, [
                           _c("label", { attrs: { for: "SelectDate" } }, [
                             _vm._v("选择日期")
                           ]),
                           _vm._v(" "),
-                          _c("div", { staticClass: "input-group mb-3" }, [
-                            _c("input", {
+                          _c(
+                            "div",
+                            { staticClass: "input-group input-group-sm mb-3" },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.evaluation.Date,
+                                    expression: "evaluation.Date"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  required: "",
+                                  type: "date",
+                                  id: "SelectDate"
+                                },
+                                domProps: { value: _vm.evaluation.Date },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.evaluation,
+                                      "Date",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "form-group input-group-sm mb-3" },
+                          [
+                            _c("label", { attrs: { for: "InputNote" } }, [
+                              _vm._v("备注")
+                            ]),
+                            _vm._v(" "),
+                            _c("textarea", {
                               directives: [
                                 {
                                   name: "model",
                                   rawName: "v-model",
-                                  value: _vm.evaluation.Date,
-                                  expression: "evaluation.Date"
+                                  value: _vm.evaluation.Note,
+                                  expression: "evaluation.Note"
                                 }
                               ],
                               staticClass: "form-control",
                               attrs: {
                                 required: "",
-                                type: "date",
-                                id: "SelectDate"
+                                type: "text",
+                                id: "InputNote"
                               },
-                              domProps: { value: _vm.evaluation.Date },
+                              domProps: { value: _vm.evaluation.Note },
                               on: {
                                 input: function($event) {
                                   if ($event.target.composing) {
@@ -37886,52 +38032,14 @@ var render = function() {
                                   }
                                   _vm.$set(
                                     _vm.evaluation,
-                                    "Date",
+                                    "Note",
                                     $event.target.value
                                   )
                                 }
                               }
-                            }),
-                            _vm._v(" "),
-                            _vm._m(1)
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "form-group mb-3" }, [
-                          _c("label", { attrs: { for: "InputNote" } }, [
-                            _vm._v("备注")
-                          ]),
-                          _vm._v(" "),
-                          _c("textarea", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.evaluation.Note,
-                                expression: "evaluation.Note"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              required: "",
-                              type: "text",
-                              id: "InputNote"
-                            },
-                            domProps: { value: _vm.evaluation.Note },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.evaluation,
-                                  "Note",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
+                            })
+                          ]
+                        ),
                         _vm._v(" "),
                         _vm._m(2),
                         _vm._v(" "),
@@ -38003,63 +38111,233 @@ var render = function() {
                           _vm._v("选择日期")
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "input-group mb-3" }, [
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm mb-3" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.mydate,
+                                  expression: "mydate"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                type: "month",
+                                id: "InputDate"
+                              },
+                              domProps: { value: _vm.mydate },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.mydate = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(4)
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-row align-items-center" }, [
+                      _c("div", { staticClass: "col-sm-3 my-1" }, [
+                        _c("label", { attrs: { for: "interview" } }, [
+                          _vm._v("面试")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm mb-3" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.rows_interviews,
+                                  expression: "rows_interviews"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "interview",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.rows_interviews },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.rows_interviews = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(5)
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-3 my-1" }, [
+                        _c(
+                          "label",
+                          { attrs: { for: "interview-evaluation" } },
+                          [_vm._v("面试评估")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm mb-3" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.rows_interviews_evaluation,
+                                  expression: "rows_interviews_evaluation"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "interview-evaluation",
+                                disabled: ""
+                              },
+                              domProps: {
+                                value: _vm.rows_interviews_evaluation
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.rows_interviews_evaluation =
+                                    $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(6)
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-3 my-1" }, [
+                        _c("label", { attrs: { for: "normal-evaluation" } }, [
+                          _vm._v("普通评估")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-sm mb-3" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.rows_normal_evaluation,
+                                  expression: "rows_normal_evaluation"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "normal-evaluation",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.rows_normal_evaluation },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.rows_normal_evaluation =
+                                    $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(7)
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4 my-1" }, [
+                      _c("label", { attrs: { for: "total" } }, [
+                        _vm._v("合计")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "input-group input-group-sm mb-3" },
+                        [
+                          _vm._m(8),
+                          _vm._v(" "),
                           _c("input", {
                             directives: [
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.mydate,
-                                expression: "mydate"
+                                value: _vm.total,
+                                expression: "total"
                               }
                             ],
                             staticClass: "form-control",
-                            attrs: {
-                              required: "",
-                              type: "month",
-                              id: "InputDate"
-                            },
-                            domProps: { value: _vm.mydate },
+                            attrs: { type: "text", id: "total", disabled: "" },
+                            domProps: { value: _vm.total },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.mydate = $event.target.value
+                                _vm.total = $event.target.value
                               }
                             }
                           }),
                           _vm._v(" "),
-                          _vm._m(4)
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm.evaluations_query.length > 0
-                      ? _c(
-                          "table",
-                          { staticClass: "table table-striped" },
-                          [
-                            _vm._m(5),
-                            _vm._v(" "),
-                            _vm._l(_vm.evaluations_query, function(evaluation) {
-                              return _c("tbody", { key: evaluation.id }, [
-                                _c("tr", [
-                                  _c("th", { attrs: { scope: "row" } }, [
-                                    _vm._v(_vm._s(evaluation.Date))
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("td", [_vm._v(_vm._s(evaluation.Type))]),
-                                  _vm._v(" "),
-                                  _c("td", [_vm._v(_vm._s(evaluation.Note))])
-                                ])
-                              ])
-                            })
-                          ],
-                          2
-                        )
-                      : _vm._e()
+                          _vm._m(9)
+                        ]
+                      )
+                    ])
                   ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.evaluations_query.length > 0 && !_vm.isInput
+                ? _c(
+                    "table",
+                    { staticClass: "table table-striped" },
+                    [
+                      _vm._m(10),
+                      _vm._v(" "),
+                      _vm._l(_vm.evaluations_query, function(evaluation) {
+                        return _c("tbody", { key: evaluation.id }, [
+                          _c("tr", [
+                            _c("th", { attrs: { scope: "row" } }, [
+                              _vm._v(_vm._s(evaluation.Date))
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(evaluation.Type))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(evaluation.Note))])
+                          ])
+                        ])
+                      })
+                    ],
+                    2
+                  )
                 : _vm._e()
             ],
             1
@@ -38143,6 +38421,46 @@ var staticRenderFns = [
           _vm._v("提交\n                  ")
         ]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("x100")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("x100")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("x80")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("=")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c("span", { staticClass: "input-group-text" }, [_vm._v("元")])
     ])
   },
   function() {

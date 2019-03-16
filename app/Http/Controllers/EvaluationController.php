@@ -20,7 +20,7 @@ class EvaluationController extends Controller
     }
     public function index()
     {
-        return response()->json(Evaluation::orderByDesc("Date")->get());
+        return response()->json(Evaluation::orderByDesc("Date")->orderByDesc("created_at")->get());
     }
 
     /**
@@ -63,7 +63,7 @@ class EvaluationController extends Controller
         $mydate = new DateTime($date);
         $year = $mydate->format('Y');
         $month = $mydate->format('m');
-        return response()->json(Evaluation::whereYear('Date',$year)->whereMonth('Date',$month)->get());
+        return response()->json(Evaluation::whereYear('Date',$year)->whereMonth('Date',$month)->orderByDesc("Date")->orderByDesc("created_at")->get());
     }
 
     /**
