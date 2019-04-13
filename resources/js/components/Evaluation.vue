@@ -8,18 +8,21 @@
             <button @click="showQuery" class="btn btn-secondary">查询</button>
           </div>
           <div class="card-body">
+            <!-- 成功输入数据提示 -->
             <modal v-if="isModalVisible" @close="isModalVisible = false">
               <h3 slot="header">
                 <i class="fas fa-thumbs-up"></i>成功
               </h3>
               <h4 slot="body">输入数据成功！</h4>
             </modal>
+            <!-- 成功删除数据提示 -->
             <modal v-if="wasDeleted" @close="wasDeleted = false">
               <h3 slot="header">
                 <i class="fas fa-thumbs-up"></i>成功
               </h3>
               <h4 slot="body">成功删除数据！</h4>
             </modal>
+            <!-- 输入数据表格 -->
             <form @submit.prevent="addEvaluation">
               <div class="form-group" v-if="isInput">
                 <label for="SelectType">选择评估类型</label>
