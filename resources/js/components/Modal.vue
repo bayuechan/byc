@@ -9,11 +9,11 @@
   };
 </script>
 <template>
-<div class="container col-md-8">
+<div class="container col-md-8 rounded-circle">
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container rounded">
+        <div class="modal-container">
 
           <div class="modal-header">
             <slot name="header">
@@ -70,7 +70,7 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
+.modal-header h6 {
   margin-top: 0;
   color: #42b983;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container bg-dark">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
@@ -64,39 +64,14 @@
                     v-model="evaluation.Note"
                   ></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" id="input_submit" class="btn btn-primary">
                   <i class="fas fa-check-circle"></i>
                   <span></span>提交
                 </button>
-                <hr>
-                <!-- 显示全部数据 -->
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">Note</th>
-                      <th scope="col">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody v-for="evaluation in evaluations" :key="evaluation.id">
-                    <tr>
-                      <th scope="row">{{ evaluation.Date }}</th>
-                      <td>{{ evaluation.Type }}</td>
-                      <td>{{ evaluation.Note }}</td>
-                      <td>
-                        <button
-                          class="btn btn-danger"
-                          @click.prevent="deleteEvaluation(evaluation.id)"
-                        >
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </form>
+
+            <hr>
             <!-- 查询数据 -->
             <div v-if="!isInput" class="form-group">
               <form @submit.prevent="query">
@@ -196,6 +171,56 @@
                 </tr>
               </tbody>
             </table>
+            <hr>
+                <!-- 显示全部数据 -->
+                <table v-if="isInput" class="table table-responsive-sm table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Note</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody v-for="evaluation in evaluations.data" :key="evaluation.id">
+                 <!-- 确认是否删除数据 -->
+                  <div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">注意！</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        请确认是否要删除此条消息！
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" @click.prevent="deleteEvaluation(evaluation.id)" data-dismiss="modal"> 删除</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                    <tr>
+                      <th scope="row">{{ evaluation.Date }}</th>
+                      <td>{{ evaluation.Type }}</td>
+                      <td>{{ evaluation.Note }}</td>
+                      <td>
+                        <button
+                          class="btn btn-danger"
+                          data-toggle="modal" data-target="#checkModal"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <pagination :data="evaluations" @pagination-change-page="getEvaluation"></pagination>
+                  </tbody>
+                </table>
+            
           </div>
         </div>
       </div>
@@ -256,8 +281,8 @@ export default {
         this.showDeleteModal();
       });
     },
-    getEvaluation() {
-      axios("/evaluations")
+    getEvaluation(page = 1) {
+      axios("/evaluations?page="+ page)
         .then(res => {
           this.evaluations = res.data;
         })

@@ -20,7 +20,7 @@ class EvaluationController extends Controller
     }
     public function index()
     {
-        return response()->json(Evaluation::orderByDesc("Date")->orderByDesc("created_at")->get());
+        return response()->json(Evaluation::orderByDesc("Date")->orderByDesc("created_at")->paginate(12));
     }
 
     /**
