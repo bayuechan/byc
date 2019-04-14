@@ -217,8 +217,8 @@
                         </button>
                       </td>
                     </tr>
-                    <pagination :data="evaluations" @pagination-change-page="getEvaluation"></pagination>
                   </tbody>
+                  <pagination :data="evaluations" @pagination-change-page="getEvaluation"></pagination>
                 </table>
             
           </div>
